@@ -20,16 +20,20 @@ export async function getRoutes() {
   // Create the request endpoint
   const endpoint = 'routes';
 
-  // Fetch the data
-  const data = fetchAPI(endpoint);
+  return fetchAPI(endpoint);
 
-  // Return Object
-  return data;
 }
 
 export async function getDirections(route: string) {
   // Create the request endpoint
   const endpoint = 'directions/' + route;
+
+  return fetchAPI(endpoint);
+}
+
+export async function getStops(route: string, direction: number) {
+  // Create the request endpoint
+  const endpoint = 'stops/' + route + '/' + direction;
 
   return fetchAPI(endpoint);
 }

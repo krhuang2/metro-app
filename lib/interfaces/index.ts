@@ -18,3 +18,8 @@ export interface IDirection {
     direction_id: number;
     direction_name: string;
 }
+
+export interface IStop {
+    place_code: string;
+    description: string;
+}

@@ -1,24 +1,26 @@
 import { useEffect, useState } from 'react';
 import { getDirections } from '../../lib/data/nextrip';
 import { IDirection } from '../../lib/interfaces';
+import StopSelector from '../StopSelector/StopSelector';
 
 interface IDirectionSelectorProps {
     route: string;
 }
 export default function DirectionSelector({route}: IDirectionSelectorProps) {
   // set state variable
-  const [selectedDirection, setSelectedDirection] = useState('');
+  const [selectedDirection, setSelectedDirection] = useState(-1);
   const [isLoading, setLoading] = useState(false);
   const [directionData, setDirectionData] = useState<IDirection[] | null>(null);
 
   useEffect(() => {
     setLoading(true);
 
-    async function fetchData() {
+    const fetchData = async () => {
       const data = await getDirections(route);
       setDirectionData(data);
       setLoading(false);
-    }
+    };
+
     fetchData();
     
   },[route]);
@@ -35,7 +37,7 @@ export default function DirectionSelector({route}: IDirectionSelectorProps) {
       <div>
         <label htmlFor='selectDirection'>Select Direction: </label>
         <select id='direction' name='selectDirection' onChange={changeSelectedDirectionHandler}>
-          <option value={''}>Select Direction</option>
+          <option value={-1}>Select Direction</option>
           {directionData &&
                 directionData.map((direction, key) => {
                   return (
@@ -46,6 +48,9 @@ export default function DirectionSelector({route}: IDirectionSelectorProps) {
         </select>
       </div>
       <div>{'You have selected: ' + selectedDirection}</div>
+      {(selectedDirection !== -1) &&
+            <StopSelector route={route} direction={selectedDirection} />
+      }
     </>
   );
 }
