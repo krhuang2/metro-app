@@ -28,6 +28,7 @@ export default function FindByRoutePage({routesData}: IHomeProps) {
   );
 }
 
+// Since we will always need the routes data, might as well fetch it server side.
 export async function getServerSideProps() {
   const routesData: INexTripRoute[] = await getRoutes();
   

@@ -14,6 +14,7 @@ export default function DirectionSelector({route}: IDirectionSelectorProps) {
 
   useEffect(() => {
     setLoading(true);
+    setSelectedDirection(-1); // reset selection if component is rerendered from prop change
 
     const fetchData = async () => {
       const data = await getDirections(route);

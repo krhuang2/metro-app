@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getStops } from '../../lib/data/nextrip';
 import { IStop } from '../../lib/interfaces';
+import DeparturesDisplay from '../DeparturesDisplay/DeparturesDisplay';
 
 interface IStopSelectorProps {
     route: string;
@@ -14,6 +15,7 @@ export default function StopSelector({route, direction}: IStopSelectorProps) {
 
   useEffect(() => {
     setLoading(true);
+    setSelectedStop(''); // reset selection if component is rerendered from prop change
 
     const fetchData = async () => {
       const data = await getStops(route, direction);
@@ -39,7 +41,7 @@ export default function StopSelector({route, direction}: IStopSelectorProps) {
         <select id='direction' name='selectDirection' onChange={changeSelectedStopHandler}>
           <option value={''}>Select Stop</option>
           {stopData &&
-                stopData.map((stop, key) => {
+                stopData?.map((stop, key) => {
                   return (
                     <option value={stop.place_code} key={key}>{stop.description}</option>
                   );
@@ -48,6 +50,9 @@ export default function StopSelector({route, direction}: IStopSelectorProps) {
         </select>
       </div>
       <div>{'You have selected: ' + selectedStop}</div>
+      {(selectedStop !== '') &&
+           <DeparturesDisplay route={route} direction={direction} placeCode={selectedStop}/>
+      }
     </>
   );
 }

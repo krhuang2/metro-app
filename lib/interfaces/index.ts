@@ -23,3 +23,15 @@ export interface IStop {
     place_code: string;
     description: string;
 }
+
+export interface IDepartures {
+    stops: {
+        stop_id: number;
+        description: string;
+    }[];
+    departures: {
+        departure_text: string;
+        description: string;
+        route_short_name: string;
+    }[];
+}

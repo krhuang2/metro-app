@@ -37,3 +37,10 @@ export async function getStops(route: string, direction: number) {
 
   return fetchAPI(endpoint);
 }
+
+export async function getDepartures(route: string, direction: number, placeCode: string) {
+  // Create the request endpoint
+  const endpoint = route + '/' + direction + '/' + placeCode;
+
+  return fetchAPI(endpoint);
+}
