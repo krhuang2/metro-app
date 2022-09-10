@@ -26,3 +26,10 @@ export async function getRoutes() {
   // Return Object
   return data;
 }
+
+export async function getDirections(route: string) {
+  // Create the request endpoint
+  const endpoint = 'directions/' + route;
+
+  return fetchAPI(endpoint);
+}

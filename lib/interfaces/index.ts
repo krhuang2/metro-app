@@ -13,3 +13,8 @@ export interface INexTripRoute{
     agency_id: number;
     route_label: string;
 }
+
+export interface IDirection {
+    direction_id: number;
+    direction_name: string;
+}

@@ -1,5 +1,6 @@
 import { INexTripRoute } from '../../lib/interfaces';
 import React, { useState } from 'react';
+import DirectionSelector from '../DirectionSelector';
 
 interface IFindByRouteProps {
     routeData: INexTripRoute[];
@@ -31,17 +32,12 @@ export default function FindByRoute({routeData}: IFindByRouteProps) {
               }
             </select>
           </div>
+          <div>{'You have selected: ' + selectedRoute}</div>
           {(selectedRoute !== '') &&
-          <div>
-            <label htmlFor='selectDirection'>Select Direction: </label>
-            <select id='direction' name='selectDirection' onChange={changeSelectedRouteHandler}>
-              <option value={''}>Select Direction</option>
-            </select>
-          </div>
+            <DirectionSelector route={selectedRoute}/>
           }
         </fieldset>
       </form>
-      <div>{'You have selected: ' + selectedRoute}</div>
     </>
   );
 }
