@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+const path = require('path');
+
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
@@ -9,6 +11,10 @@ const nextConfig = {
   // a) Unnecessarily identifies the backend stack.
   // b) Sends a few more bytes over the wire for no good reason.
   poweredByHeader: false,
+  sassOptions: {
+    includePaths: [path.join(__dirname, 'styles')],
+    prependData: '@import "/styles/_vars.scss";'
+  },
 };
 
 module.exports = nextConfig;

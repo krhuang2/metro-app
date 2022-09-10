@@ -1,0 +1,28 @@
+
+.heroSection {
+    padding: $gap $gapLarge;
+    text-align: center;
+}
+
+.heroImage {
+    padding: $gap;
+    max-width: $gapLarge * 6;
+    margin: auto;
+}
+
+.heroTitle {
+    font-size: $textLarge;
+
+    @media screen and (min-width: $medium) {
+        font-size: $textExtraLarge;
+    }
+}
+
+.selectRouteLinks {
+    padding: $gap 0;
+}
+
+.selectRouteLink {
+    font-size: $textMedium;
+    padding: 0 $gap;
+}

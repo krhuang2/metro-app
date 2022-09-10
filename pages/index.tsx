@@ -1,15 +1,8 @@
-//import type { GetServerSidePropsContext, NextPage } from 'next';
 import Head from 'next/head';
-import FindByRoute from '../components/FindByRoute/FindByRoute';
-//import Image from 'next/image';
-import { getRoutes } from '../lib/data/nextrip';
-import { INexTripRoute } from '../lib/interfaces';
+import HeroSection from '../components/HeroSection/HeroSection';
+import image from '../public/images/bus-home.jpg';
 
-interface IHomeProps {
-  routesData: INexTripRoute[];
-}
-
-export default function Home({routesData}: IHomeProps) {
+export default function Home() {
 
   return (
     <div className={'container'}>
@@ -20,25 +13,9 @@ export default function Home({routesData}: IHomeProps) {
       </Head>
 
       <main className={'main'}>
-        <h1 className={'title'}>
-          Find Your Bus Stop
-        </h1>
+        <HeroSection title={'Search for Real Time Departures'} image={image} imageAlt={'A crashed schoolbus in the snow.'}/>
 
-        {routesData &&
-          <FindByRoute routeData={routesData}/>
-        }
       </main>
     </div>
   );
-}
-
-
-export async function getServerSideProps() {
-  const routesData: INexTripRoute[] = await getRoutes();
-
-  return {
-    props: {
-      routesData
-    }
-  };
 }
