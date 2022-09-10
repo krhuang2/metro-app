@@ -1,6 +1,6 @@
 import Head from 'next/head';
-import FindByRoute from '../components/FindByRoute/FindByRoute';
-import HeroSection from '../components/HeroSection/HeroSection';
+import FindByRoute from '../components/FindByRoute';
+import HeroSection from '../components/HeroSection';
 import { getRoutes } from '../lib/data/nextrip';
 import { INexTripRoute } from '../lib/interfaces';
 import image from '../public/images/smiling-bus.jpg';
