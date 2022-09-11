@@ -31,37 +31,50 @@ export default function FindByRoute({routeData}: IFindByRouteProps) {
     setIntialLoad(false);
   }
 
+  // Remember previous selections to prevent unnessary data fetching
+  const [prevRoute, setPrevRoute] = useState('');
+  const [prevDirection, setPrevDirection] = useState(-1);
+
   // We want to do all the data fetching at the parent component, then pass to children as needed
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchDirectionsData = async () => {
       const data = await getDirections(selectedRoute);
       setDirectionData(data);
+    };
 
-      // Fetch stops data if direction has a selection
-      if (selectedDirection != -1) {
-        console.log('fetching stop data');
-        const data = await getStops(selectedRoute, selectedDirection);
-        setStopData(data);
-
-        if (selectedStop !== '') {
-          console.log('fetching departures');
-          const data = await getDepartures(selectedRoute, selectedDirection, selectedStop);
-          setDeparturesData(data);
-        }
-      }
+    const fetchStopsData = async () => {
+      const data = await getStops(selectedRoute, selectedDirection);
+      setStopData(data);
     };
     
+    const fetchDeparturesData = async () => {
+      const data = await getDepartures(selectedRoute, selectedDirection, selectedStop);
+      setDeparturesData(data);
+    };
 
-    // Fetch direction data if route has a selection
-    if (selectedRoute !== '') {
+    // Fetch direction data if route has a selection and different from previous route
+    if (selectedRoute !== '' && (prevRoute != selectedRoute)) {
       console.log('fetching directions data');
-      fetchData();
+      setPrevRoute(selectedRoute);
+      fetchDirectionsData();
     }
-    console.log('selectedRoute: ' + selectedRoute);
-    console.log('selectedDirection: ' + selectedDirection);
-    console.log('selectedStop: ' + selectedStop);
+
+    else if (selectedDirection != -1 && (prevDirection != selectedDirection)) {
+      console.log('fetching stop data');
+      setPrevDirection(selectedDirection);
+      fetchStopsData();
+    }
+
+    else if (selectedStop !== '') {
+      console.log('fetching departures');
+      fetchDeparturesData();
+    }
+  
+    // console.log('selectedRoute: ' + selectedRoute);
+    // console.log('selectedDirection: ' + selectedDirection);
+    // console.log('selectedStop: ' + selectedStop);
     
-  },[selectedRoute, selectedDirection, selectedStop]);
+  },[selectedRoute, selectedDirection, selectedStop, prevRoute, prevDirection]);
 
   return (
     <>

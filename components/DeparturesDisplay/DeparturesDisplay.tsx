@@ -4,9 +4,9 @@ import styles from './DeparturesDisplay.module.scss';
 
 interface IDeparturesDisplayProps {
     departuresData: IDepartures;
-    selectedRoute: string;
-    selectedDirection: number;
-    selectedStop: string;
+    selectedRoute?: string;
+    selectedDirection?: number;
+    selectedStop?: string;
 }
 export default function DeparturesDisplay({departuresData, selectedRoute, selectedDirection, selectedStop}: IDeparturesDisplayProps) {
   // set state variable
@@ -16,7 +16,7 @@ export default function DeparturesDisplay({departuresData, selectedRoute, select
   },[selectedRoute, selectedDirection, selectedStop]);
 
   // stops come in an array but seems like it's always length one
-  const stop = departuresData.stops[0];
+  const stop = departuresData?.stops[0];
 
   return (
     <>
