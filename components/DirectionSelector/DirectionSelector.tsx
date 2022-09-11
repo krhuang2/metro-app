@@ -1,43 +1,32 @@
-import { useEffect, useState } from 'react';
-import { getDirections } from '../../lib/data/nextrip';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { IDirection } from '../../lib/interfaces';
-import StopSelector from '../StopSelector/StopSelector';
+import { updateDirection } from '../../lib/redux/slices/selectionSlice';
+import { RootState } from '../../lib/redux/store';
 
 interface IDirectionSelectorProps {
-    route: string;
+    directionData: IDirection[];
+    selectedRoute: string;
 }
-export default function DirectionSelector({route}: IDirectionSelectorProps) {
-  // set state variable
-  const [selectedDirection, setSelectedDirection] = useState(-1);
-  const [isLoading, setLoading] = useState(false);
-  const [directionData, setDirectionData] = useState<IDirection[] | null>(null);
+export default function DirectionSelector({directionData, selectedRoute}: IDirectionSelectorProps) {
+  // get the global state
+  const selectedDirection = useSelector((state: RootState) => state.selection.direction);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    setLoading(true);
-    setSelectedDirection(-1); // reset selection if component is rerendered from prop change
+    // Reset the current selected option if the selected route changes
+    let element: any = document.getElementById('direction');
+    if (element) {
+      element.selectedIndex = 0;
+    }
+  },[selectedRoute]);
 
-    const fetchData = async () => {
-      const data = await getDirections(route);
-      setDirectionData(data);
-      setLoading(false);
-    };
-
-    fetchData();
-    
-  },[route]);
-
-  // handle selected direction change
-  const changeSelectedDirectionHandler = (e: any) => {
-    setSelectedDirection(e.currentTarget.value);
-  };
-
-  if (isLoading) return <p>Loading...</p>;
 
   return (
     <>
       <div>
         <label htmlFor='selectDirection'>Select Direction: </label>
-        <select id='direction' name='selectDirection' onChange={changeSelectedDirectionHandler}>
+        <select id='direction' name='selectDirection' onChange={(e) => dispatch(updateDirection(e.currentTarget.value))}>
           <option value={-1}>Select Direction</option>
           {directionData &&
                 directionData.map((direction, key) => {
@@ -49,9 +38,6 @@ export default function DirectionSelector({route}: IDirectionSelectorProps) {
         </select>
       </div>
       <div>{'You have selected: ' + selectedDirection}</div>
-      {(selectedDirection !== -1) &&
-            <StopSelector route={route} direction={selectedDirection} />
-      }
     </>
   );
 }

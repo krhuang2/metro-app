@@ -1,48 +1,57 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect } from 'react';
 import { IDepartures } from '../../lib/interfaces';
-import { getDepartures } from '../../lib/data/nextrip';
+import styles from './DeparturesDisplay.module.scss';
 
 interface IDeparturesDisplayProps {
-    route: string;
-    direction: number;
-    placeCode: string;
+    departuresData: IDepartures;
+    selectedRoute: string;
+    selectedDirection: number;
+    selectedStop: string;
 }
-export default function DeparturesDisplay({route, direction, placeCode}: IDeparturesDisplayProps) {
+export default function DeparturesDisplay({departuresData, selectedRoute, selectedDirection, selectedStop}: IDeparturesDisplayProps) {
   // set state variable
-  const [isLoading, setLoading] = useState(false);
-  const [departuresData, setDeparturesData] = useState<IDepartures | null>(null);
-
-  const fetchData = useCallback(async () => {
-    const data = await getDepartures(route, direction, placeCode);
-    setDeparturesData(data);
-    setLoading(false);
-  },[route, direction, placeCode]);
 
   useEffect(() => {
-    setLoading(true);
-    console.log('Departures Display Mounted');
-    fetchData();
+    console.log('Departures Display rendered');
+  },[selectedRoute, selectedDirection, selectedStop]);
 
-    
-    //setDeparturesData(null); // reset selection if component is rerendered from prop change
-    
-  },[fetchData]);
-
-  
-
-  
-
-
-  if (isLoading) return <p>Loading...</p>;
+  // stops come in an array but seems like it's always length one
+  const stop = departuresData.stops[0];
 
   return (
     <>
       {departuresData &&
-                departuresData.departures.map((stop, key) => {
-                  return (
-                    <div key={key}>{stop.route_short_name}</div>
-                  );
-                })
+        <div className={styles.departuresSection}>
+          <div className={styles.stopDescription}>
+            <h2 className={styles.stopName}>{stop.description}</h2>
+            <span className={styles.stopNumber}><strong>Stop #: </strong>{stop.stop_id}</span>
+          </div>
+          <div className={styles.stopDepartures}>
+            <table className={styles.departuresTable}>
+              <thead>
+                <tr>
+                  <th>Route</th>
+                  <th>Destination</th>
+                  <th>Departs</th>
+                </tr>
+              </thead>
+              <tbody>
+                {departuresData.departures &&
+                    departuresData.departures.map((departure, key) => {
+                      return (
+                        <tr className={styles.departure} key={key}>
+                          <td>{departure.route_short_name}</td>
+                          <td>{departure.description}</td>
+                          <td>{departure.departure_text}</td>
+                        </tr>
+                      );
+                    })
+                }
+                
+              </tbody>
+            </table>
+          </div>
+        </div>      
       }
     </>
   );

@@ -1,44 +1,33 @@
-import { useEffect, useState } from 'react';
-import { getStops } from '../../lib/data/nextrip';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { IStop } from '../../lib/interfaces';
-import DeparturesDisplay from '../DeparturesDisplay/DeparturesDisplay';
+import { updatePlaceCode } from '../../lib/redux/slices/selectionSlice';
+import { RootState } from '../../lib/redux/store';
 
 interface IStopSelectorProps {
-    route: string;
-    direction: number;
+    stopData: IStop[];
+    selectedRoute: string;
+    selectedDirection: number;
 }
-export default function StopSelector({route, direction}: IStopSelectorProps) {
-  // set state variable
-  const [selectedStop, setSelectedStop] = useState('');
-  const [isLoading, setLoading] = useState(false);
-  const [stopData, setStopData] = useState<IStop[] | null>(null);
+export default function StopSelector({stopData, selectedRoute, selectedDirection}: IStopSelectorProps) {
+  // get the global state
+  const selectedStop = useSelector((state: RootState) => state.selection.placeCode);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    setLoading(true);
-    setSelectedStop(''); // reset selection if component is rerendered from prop change
-
-    const fetchData = async () => {
-      const data = await getStops(route, direction);
-      setStopData(data);
-      setLoading(false);
-    };
+    // Reset the current selected option if the selected route changes
+    let element: any = document.getElementById('stop');
+    if (element) {
+      element.selectedIndex = 0;
+    }
     
-    fetchData();
-    
-  },[route, direction]);
-
-  // handle selected direction change
-  const changeSelectedStopHandler = (e: any) => {
-    setSelectedStop(e.currentTarget.value);
-  };
-
-  if (isLoading) return <p>Loading...</p>;
+  },[selectedRoute, selectedDirection]);
 
   return (
     <>
       <div>
-        <label htmlFor='selectDirection'>Select Stop: </label>
-        <select id='direction' name='selectDirection' onChange={changeSelectedStopHandler}>
+        <label htmlFor='selectStop'>Select Stop: </label>
+        <select id='stop' name='selectStop' onChange={(e) => dispatch(updatePlaceCode(e.currentTarget.value))}>
           <option value={''}>Select Stop</option>
           {stopData &&
                 stopData?.map((stop, key) => {
@@ -50,9 +39,6 @@ export default function StopSelector({route, direction}: IStopSelectorProps) {
         </select>
       </div>
       <div>{'You have selected: ' + selectedStop}</div>
-      {(selectedStop !== '') &&
-           <DeparturesDisplay route={route} direction={direction} placeCode={selectedStop}/>
-      }
     </>
   );
 }
