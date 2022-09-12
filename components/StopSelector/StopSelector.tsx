@@ -6,10 +6,9 @@ import { RootState } from '../../lib/redux/store';
 
 interface IStopSelectorProps {
     stopData: IStop[];
-    selectedRoute: string;
     selectedDirection: number;
 }
-export default function StopSelector({stopData, selectedRoute, selectedDirection}: IStopSelectorProps) {
+export default function StopSelector({stopData, selectedDirection}: IStopSelectorProps) {
   // get the global state
   const selectedStop = useSelector((state: RootState) => state.selection.placeCode);
   const dispatch = useDispatch();
@@ -21,7 +20,7 @@ export default function StopSelector({stopData, selectedRoute, selectedDirection
       element.selectedIndex = 0;
     }
     
-  },[selectedRoute, selectedDirection]);
+  },[selectedDirection]);
 
   return (
     <>

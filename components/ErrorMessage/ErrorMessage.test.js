@@ -9,6 +9,6 @@ describe('ErrorMessage Component', () => {
     render(<ErrorMessage message={'test'}/>);
     // Act
     // Assert
-    expect(screen.getByTestId('errorMessage')).toEqual('test');
+    expect(screen.getByTestId('errorMessage')).toHaveTextContent('test');
   });
 });

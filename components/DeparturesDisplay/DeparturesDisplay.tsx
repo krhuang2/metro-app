@@ -1,26 +1,17 @@
-import { useEffect } from 'react';
 import { IDepartures } from '../../lib/interfaces';
 import styles from './DeparturesDisplay.module.scss';
 
+// A Stateless component that displays the departures that are given as a prop
 interface IDeparturesDisplayProps {
     departuresData: IDepartures;
-    selectedRoute?: string;
-    selectedDirection?: number;
-    selectedStop?: string;
-    stopInput?: number;
 }
-export default function DeparturesDisplay({departuresData, selectedRoute, selectedDirection, selectedStop}: IDeparturesDisplayProps) {
-  // set state variable
+export default function DeparturesDisplay({departuresData}: IDeparturesDisplayProps) {
 
-  useEffect(() => {
-    console.log('Departures Display rendered');
-  },[selectedRoute, selectedDirection, selectedStop, departuresData]);
-
-  // Since departuresData is a prop
-  if (!departuresData.stops) {
+  // Since parent component can load this component before departures data is actually ready, we need to check
+  if (!departuresData || !departuresData.stops) {
     console.log('loading');
     return (
-      <div>Loading...</div>
+      <div data-testid={'loading'}>Loading...</div>
     );
   }
   else {
@@ -31,8 +22,8 @@ export default function DeparturesDisplay({departuresData, selectedRoute, select
         {departuresData &&
           <div className={styles.departuresSection}>
             <div className={styles.stopDescription}>
-              <h2 className={styles.stopName}>{stop.description}</h2>
-              <span className={styles.stopNumber}><strong>Stop #: </strong>{stop.stop_id}</span>
+              <h2 className={styles.stopName} data-testid={'stopDescription'}>{stop.description}</h2>
+              <span className={styles.stopNumber} data-testid={'stopNumber'}><strong>Stop #: </strong>{stop.stop_id}</span>
             </div>
             <div className={styles.stopDepartures}>
               <table className={styles.departuresTable}>
@@ -48,9 +39,9 @@ export default function DeparturesDisplay({departuresData, selectedRoute, select
                       departuresData.departures.map((departure, key) => {
                         return (
                           <tr className={styles.departure} key={key}>
-                            <td>{departure.route_short_name}</td>
-                            <td>{departure.description}</td>
-                            <td>{departure.departure_text}</td>
+                            <td data-testid={'routeShortName'}>{departure.route_short_name}</td>
+                            <td data-testid={'description'}>{departure.description}</td>
+                            <td data-testid={'departureText'}>{departure.departure_text}</td>
                           </tr>
                         );
                       })

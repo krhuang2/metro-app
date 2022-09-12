@@ -1,0 +1,61 @@
+import {describe, expect, test} from '@jest/globals';
+import {render, screen } from '@testing-library/react';
+import DeparturesDisplay from './DeparturesDisplay';
+import '@testing-library/jest-dom/extend-expect';
+
+const validDeparturesData = {
+  stops: [
+    {
+      stop_id: 56334,
+      description: 'Target Field Station Platform 2'
+    }
+  ],
+  departures: [
+    {
+      departure_text: '4:00',
+      description: 'to Mall of America',
+      route_short_name: 'Blue'
+    }
+  ]
+};
+
+const invalidDeparturesData = {
+  stops: null,
+  departures: []
+};
+
+describe('DeparturesDisplay Component', () => {
+  test('Display loading fallback if departuresData is incomplete', () => {
+    // Arrange
+    render(<DeparturesDisplay departuresData={invalidDeparturesData}/>);
+    // Act
+    // Assert
+    expect((screen.getByTestId('loading'))).toBeInTheDocument();
+  });
+
+  test('do not Display loading fallback if departuresData is valid', () => {
+    // Arrange
+    render(<DeparturesDisplay departuresData={validDeparturesData}/>);
+    // Act
+    const loadingElement = screen.queryByTestId('loading');
+    // Assert
+    expect(loadingElement).toBeNull();
+  });
+
+  test('Display valid data if departuresData is valid', () => {
+    // Arrange
+    render(<DeparturesDisplay departuresData={validDeparturesData}/>);
+    // Act
+    const stopDescription = screen.getByTestId('stopDescription').textContent;
+    const stopNumber = screen.getByTestId('stopNumber').textContent;
+    const routeShortName = screen.getAllByTestId('routeShortName')[0].textContent;
+    const description = screen.getAllByTestId('description')[0].textContent;
+    const departureText = screen.getAllByTestId('departureText')[0].textContent;
+    // Assert
+    expect(stopDescription).toBe(validDeparturesData.stops[0].description);
+    expect(stopNumber).toBe('Stop #: ' + validDeparturesData.stops[0].stop_id);
+    expect(routeShortName).toBe(validDeparturesData.departures[0].route_short_name);
+    expect(description).toBe(validDeparturesData.departures[0].description);
+    expect(departureText).toBe(validDeparturesData.departures[0].departure_text);
+  });
+});

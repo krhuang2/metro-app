@@ -52,7 +52,6 @@ export default function FindByRoute({routeData}: IFindByRouteProps) {
       }).then((data) => {
         setDirectionData(data);
       });
-
     };
 
     const fetchStopsData = async () => {
@@ -120,12 +119,12 @@ export default function FindByRoute({routeData}: IFindByRouteProps) {
             <DirectionSelector directionData={directionData} selectedRoute={selectedRoute}/>
           }
           {(selectedDirection != -1) && (stopData != null) && !hasError &&
-            <StopSelector stopData={stopData} selectedRoute={selectedRoute} selectedDirection={selectedDirection}/>
+            <StopSelector stopData={stopData} selectedDirection={selectedDirection}/>
           }
         </fieldset>
       </form>
       {(selectedStop !== '') && (departuresData != null) && !hasError &&
-        <DeparturesDisplay departuresData={departuresData} selectedRoute={selectedRoute} selectedDirection={selectedDirection} selectedStop={selectedStop}/>
+        <DeparturesDisplay departuresData={departuresData} />
       }
       {hasError &&
         <ErrorMessage message={'Uh Oh... Something went wrong.'} /> 
