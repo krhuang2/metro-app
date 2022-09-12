@@ -1,7 +1,6 @@
 import Head from 'next/head';
 import FindByRoute from '../components/FindByRoute';
 import HeroSection from '../components/HeroSection';
-import { getRoutes } from '../lib/data/nextrip';
 import { INexTripRoute } from '../lib/interfaces';
 import image from '../public/images/smiling-bus.jpg';
 
@@ -38,3 +37,9 @@ export async function getServerSideProps() {
     }
   };
 }
+
+const getRoutes = async () => {
+  return fetch('https://svc.metrotransit.org/nextripv2/routes').then((response) => {
+    return response.json();
+  });
+};

@@ -13,8 +13,10 @@ export default function Home() {
       </Head>
 
       <main className={'main'}>
-        <HeroSection title={'Search for Real Time Departures'} image={image} imageAlt={'A crashed schoolbus in the snow.'}/>
-
+        <HeroSection title={'NexTrip Demo Web App'} image={image} imageAlt={'A crashed schoolbus in the snow.'}/>
+        <p>
+          This is an demo app using the NexTrip API. Navigate to <a href={'/find-by-route'}>Find By Route</a> or <a href={'/find-by-stop'}>Find By Stop</a> in order to find real time departures.
+        </p>
       </main>
     </div>
   );
