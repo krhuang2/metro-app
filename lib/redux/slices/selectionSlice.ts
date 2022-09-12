@@ -17,7 +17,7 @@ export const selectionSlice = createSlice({
   initialState,
   reducers: {
     updateRoute: (state, action) => {
-      state.route = action.payload; // set new route
+      state.route = action.payload;
       // reset all other fields
       state.direction = -1;
       state.placeCode = '';

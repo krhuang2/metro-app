@@ -5,10 +5,10 @@ import { getRoutes } from '../lib/data/nextrip';
 import { INexTripRoute } from '../lib/interfaces';
 import image from '../public/images/smiling-bus.jpg';
 
-interface IHomeProps {
+interface IFindByRoutePageProps {
     routesData: INexTripRoute[];
   }
-export default function FindByRoutePage({routesData}: IHomeProps) {
+export default function FindByRoutePage({routesData}: IFindByRoutePageProps) {
   return (
     <div className={'container'}>
       <Head>
@@ -18,7 +18,7 @@ export default function FindByRoutePage({routesData}: IHomeProps) {
       </Head>
     
       <main className={'main'}>
-        <HeroSection title={'Find By Route'} image={image} imageAlt={'A creepy smiling green bus.'}/>
+        <HeroSection title={'Find Departures By Route'} image={image} imageAlt={'A creepy smiling green bus.'}/>
     
         {routesData &&
             <FindByRoute routeData={routesData}/>

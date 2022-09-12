@@ -4,9 +4,9 @@ import DirectionSelector from '../DirectionSelector';
 import { useSelector, useDispatch } from 'react-redux';
 import { resetSelections, updateRoute } from '../../lib/redux/slices/selectionSlice';
 import { RootState } from '../../lib/redux/store';
-import { getDepartures, getDirections, getStops } from '../../lib/data/nextrip';
 import StopSelector from '../StopSelector/StopSelector';
 import DeparturesDisplay from '../DeparturesDisplay/DeparturesDisplay';
+import ErrorMessage from '../ErrorMessage/ErrorMessage';
 
 interface IFindByRouteProps {
     routeData: INexTripRoute[];
@@ -35,21 +35,46 @@ export default function FindByRoute({routeData}: IFindByRouteProps) {
   const [prevRoute, setPrevRoute] = useState('');
   const [prevDirection, setPrevDirection] = useState(-1);
 
+  // Keep track if there are errors
+  const [hasError, setHasError] = useState(false);
+
   // We want to do all the data fetching at the parent component, then pass to children as needed
+  // TODO: Ideally we can potentially move the logic and data fetching async calls into middleweare actions using Redux Thunk
+  // That way, it is more reusable and we can call the fetch as the state changes instead of checking every time the component rerenders
+  // OR, we could do the data fetching at the child component level while using redux to keep updating selected state, but also might be complicated.
   useEffect(() => {
     const fetchDirectionsData = async () => {
-      const data = await getDirections(selectedRoute);
-      setDirectionData(data);
+      fetch('https://svc.metrotransit.org/nextripv2/directions/' + selectedRoute).then((response) => {
+        if (!response.ok) {
+          setHasError(true);
+        } else {setHasError(false);}
+        return response.json();
+      }).then((data) => {
+        setDirectionData(data);
+      });
+
     };
 
     const fetchStopsData = async () => {
-      const data = await getStops(selectedRoute, selectedDirection);
-      setStopData(data);
+      fetch('https://svc.metrotransit.org/nextripv2/stops/' + selectedRoute + '/' + selectedDirection).then((response) => {
+        if (!response.ok) {
+          setHasError(true);
+        } else {setHasError(false);}
+        return response.json();
+      }).then((data) => {
+        setStopData(data);
+      });
     };
     
     const fetchDeparturesData = async () => {
-      const data = await getDepartures(selectedRoute, selectedDirection, selectedStop);
-      setDeparturesData(data);
+      fetch('https://svc.metrotransit.org/nextripv2/' + selectedRoute + '/' + selectedDirection + '/' + selectedStop).then((response) => {
+        if (!response.ok) {
+          setHasError(true);
+        } else {setHasError(false);}
+        return response.json();
+      }).then((data) => {
+        setDeparturesData(data);
+      });
     };
 
     // Fetch direction data if route has a selection and different from previous route
@@ -58,21 +83,17 @@ export default function FindByRoute({routeData}: IFindByRouteProps) {
       setPrevRoute(selectedRoute);
       fetchDirectionsData();
     }
-
+    // Fetch Stops data if direction has a selection and has changed
     else if (selectedDirection != -1 && (prevDirection != selectedDirection)) {
       console.log('fetching stop data');
       setPrevDirection(selectedDirection);
       fetchStopsData();
     }
-
+    // Fetch Departures if stop has a selection
     else if (selectedStop !== '') {
       console.log('fetching departures');
       fetchDeparturesData();
     }
-  
-    // console.log('selectedRoute: ' + selectedRoute);
-    // console.log('selectedDirection: ' + selectedDirection);
-    // console.log('selectedStop: ' + selectedStop);
     
   },[selectedRoute, selectedDirection, selectedStop, prevRoute, prevDirection]);
 
@@ -95,16 +116,19 @@ export default function FindByRoute({routeData}: IFindByRouteProps) {
             </select>
           </div>
           <div>{'You have selected: ' + selectedRoute}</div>
-          {(selectedRoute !== '') && (directionData != null) &&
+          {(selectedRoute !== '') && (directionData != null) && !hasError &&
             <DirectionSelector directionData={directionData} selectedRoute={selectedRoute}/>
           }
-          {(selectedDirection != -1) && (stopData != null) &&
+          {(selectedDirection != -1) && (stopData != null) && !hasError &&
             <StopSelector stopData={stopData} selectedRoute={selectedRoute} selectedDirection={selectedDirection}/>
           }
         </fieldset>
       </form>
-      {(selectedStop !== '') && (departuresData != null) &&
+      {(selectedStop !== '') && (departuresData != null) && !hasError &&
         <DeparturesDisplay departuresData={departuresData} selectedRoute={selectedRoute} selectedDirection={selectedDirection} selectedStop={selectedStop}/>
+      }
+      {hasError &&
+        <ErrorMessage message={'Uh Oh... Something went wrong.'} /> 
       }
     </>
   );

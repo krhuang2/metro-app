@@ -18,7 +18,7 @@ export default function HeroSection({title, image, imageAlt}: IHeroSectionProps)
       <div className={styles.selectRouteLinks}>
         <Link href={'/'}><a className={styles.selectRouteLink}>Home</a></Link>
         <Link href={'/find-by-route'}><a className={styles.selectRouteLink}>Find By Route</a></Link>
-        <Link href={'/find-by-route'}><a className={styles.selectRouteLink}>Find By Stop Number</a></Link>
+        <Link href={'/find-by-stop'}><a className={styles.selectRouteLink}>Find By Stop Number</a></Link>
       </div>
     </section>
   );
