@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import selectionReducer from './slices/selectionSlice';
+import dataReducer from './slices/dataSlice';
 // ...
 
 export const store = configureStore({
   reducer: {
-    selection: selectionReducer
+    selection: selectionReducer,
+    data: dataReducer
   }
 });
 

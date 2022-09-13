@@ -1,15 +1,14 @@
-import { IDepartures } from '../../lib/interfaces';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../lib/redux/store';
 import styles from './DeparturesDisplay.module.scss';
 
-// A Stateless component that displays the departures that are given as a prop
-interface IDeparturesDisplayProps {
-    departuresData: IDepartures;
-}
-export default function DeparturesDisplay({departuresData}: IDeparturesDisplayProps) {
+
+export default function DeparturesDisplay() {
+
+  const departuresData = useSelector((state: RootState) => state.data.departuresData);
 
   // Since parent component can load this component before departures data is actually ready, we need to check
   if (!departuresData || !departuresData.stops) {
-    console.log('loading');
     return (
       <div data-testid={'loading'}>Loading...</div>
     );

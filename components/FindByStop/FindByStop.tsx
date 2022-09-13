@@ -1,13 +1,26 @@
 import { useState } from 'react';
-import { IDepartures } from '../../lib/interfaces';
+import { useDispatch, useSelector } from 'react-redux';
+import { resetData, updateDeparturesData } from '../../lib/redux/slices/dataSlice';
+import { RootState } from '../../lib/redux/store';
 import DeparturesDisplay from '../DeparturesDisplay';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
 
 
 export default function FindByStop() {
-  //const [stopInput, setStopInput] = useState<number | null>(null);
-  const [departuresData, setDeparturesData] = useState<IDepartures | null>(null);
+
+  // Keep track if there are errors
   const [hasError, setHasError] = useState(false);
+
+  const departuresData = useSelector((state: RootState) => state.data.departuresData);
+
+  const dispatch = useDispatch();
+  const [initialLoad, setIntialLoad] = useState(true); // Is this a new load on the page?
+
+  // Want to make sure we reset all state if we navigate off and on again
+  if (initialLoad) {
+    dispatch(resetData());
+    setIntialLoad(false);
+  }
 
   const fetchDeparturesData = async (stopId: number) => {
     const url = 'https://svc.metrotransit.org/nextripv2/' + stopId;
@@ -18,7 +31,7 @@ export default function FindByStop() {
       } else {setHasError(false);}
       return response.json();
     }).then((data) => {
-      setDeparturesData(data);
+      dispatch(updateDeparturesData(data));
     });
   };
 
@@ -31,16 +44,6 @@ export default function FindByStop() {
       fetchDeparturesData(inputValue);
     }
   };
-
-  // const handleInputChage = (event: any) => {
-  //   // check if empty input
-  //   if (event.target.value == '') {
-  //     setInputValue(NaN);
-  //   }
-  //   else {
-  //     setInputValue(event.target.value);
-  //   }
-  // };
 
   return (
     <>
@@ -55,7 +58,7 @@ export default function FindByStop() {
         </fieldset>
       </form>
       {(departuresData != null) && (!hasError) &&
-        <DeparturesDisplay departuresData={departuresData}/>
+        <DeparturesDisplay />
       }
       {hasError &&
         <ErrorMessage message={'Invalid Stop Number Entered'}/>
