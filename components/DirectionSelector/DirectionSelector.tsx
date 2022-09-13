@@ -26,12 +26,12 @@ export default function DirectionSelector({directionData, selectedRoute}: IDirec
     <>
       <div>
         <label htmlFor='selectDirection'>Select Direction: </label>
-        <select id='direction' name='selectDirection' onChange={(e) => dispatch(updateDirection(e.currentTarget.value))}>
-          <option value={-1}>Select Direction</option>
+        <select data-testid={'directionSelector'} id='direction' name='selectDirection' onChange={(e) => dispatch(updateDirection(e.currentTarget.value))}>
+          <option data-testid={'defaultOption'} value={-1}>Select Direction</option>
           {directionData &&
                 directionData.map((direction, key) => {
                   return (
-                    <option value={direction.direction_id} key={key}>{direction.direction_name}</option>
+                    <option data-testid={'option'} value={direction.direction_id} key={key}>{direction.direction_name}</option>
                   );
                 })
           }
