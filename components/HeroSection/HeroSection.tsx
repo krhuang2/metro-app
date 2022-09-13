@@ -15,11 +15,11 @@ export default function HeroSection({title, image, imageAlt}: IHeroSectionProps)
       {image && imageAlt &&
         <div className={styles.heroImage}><Image src={image} alt={imageAlt} /></div>
       }
-      <div className={styles.selectRouteLinks}>
+      <nav className={styles.selectRouteLinks}>
         <Link href={'/'}><a className={styles.selectRouteLink}>Home</a></Link>
         <Link href={'/find-by-route'}><a className={styles.selectRouteLink}>Find By Route</a></Link>
         <Link href={'/find-by-stop'}><a className={styles.selectRouteLink}>Find By Stop Number</a></Link>
-      </div>
+      </nav>
     </section>
   );
         

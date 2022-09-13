@@ -44,7 +44,7 @@ export default function FindByStop() {
 
   return (
     <>
-      <form>
+      <form className={'form'}>
         <fieldset>
           <legend>Find By Stop Number</legend>
           <div>

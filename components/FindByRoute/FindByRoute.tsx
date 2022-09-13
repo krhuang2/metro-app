@@ -78,19 +78,16 @@ export default function FindByRoute({routeData}: IFindByRouteProps) {
 
     // Fetch direction data if route has a selection and different from previous route
     if (selectedRoute !== '' && (prevRoute != selectedRoute)) {
-      console.log('fetching directions data');
       setPrevRoute(selectedRoute);
       fetchDirectionsData();
     }
     // Fetch Stops data if direction has a selection and has changed
     else if (selectedDirection != -1 && (prevDirection != selectedDirection)) {
-      console.log('fetching stop data');
       setPrevDirection(selectedDirection);
       fetchStopsData();
     }
     // Fetch Departures if stop has a selection
     else if (selectedStop !== '') {
-      console.log('fetching departures');
       fetchDeparturesData();
     }
     
@@ -98,12 +95,12 @@ export default function FindByRoute({routeData}: IFindByRouteProps) {
 
   return (
     <>
-      <form>
+      <form className={'form'}>
         <fieldset>
           <legend>Find By Route</legend>
           <div>
-            <label htmlFor='selectRoute'>Select Route: </label>
-            <select id='route' name='selectRoute' onChange={(e) => dispatch(updateRoute(e.currentTarget.value))}>
+            <label className={'screenReaderText'} htmlFor='selectRoute'>Select Route</label>
+            <select className={'select'} id='route' name='selectRoute' onChange={(e) => dispatch(updateRoute(e.currentTarget.value))}>
               <option value={''}>Select Route</option>
               {routeData &&
                 routeData.map((route, key) => {
@@ -114,7 +111,6 @@ export default function FindByRoute({routeData}: IFindByRouteProps) {
               }
             </select>
           </div>
-          <div>{'You have selected: ' + selectedRoute}</div>
           {(selectedRoute !== '') && (directionData != null) && !hasError &&
             <DirectionSelector directionData={directionData} selectedRoute={selectedRoute}/>
           }

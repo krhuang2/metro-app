@@ -17,16 +17,16 @@ export default function StopSelector({stopData, selectedDirection}: IStopSelecto
     // Reset the current selected option if the selected route changes
     let element: any = document.getElementById('stop');
     if (element) {
-      element.selectedIndex = 0;
+      element.value = selectedStop;
     }
     
-  },[selectedDirection]);
+  },[selectedDirection, selectedStop]);
 
   return (
     <>
       <div>
-        <label htmlFor='selectStop'>Select Stop: </label>
-        <select id='stop' name='selectStop' onChange={(e) => dispatch(updatePlaceCode(e.currentTarget.value))}>
+        <label className={'screenReaderText'} htmlFor='selectStop'>Select Stop</label>
+        <select className={'select'} id='stop' name='selectStop' onChange={(e) => dispatch(updatePlaceCode(e.currentTarget.value))}>
           <option value={''}>Select Stop</option>
           {stopData &&
                 stopData?.map((stop, key) => {
@@ -37,7 +37,6 @@ export default function StopSelector({stopData, selectedDirection}: IStopSelecto
           }
         </select>
       </div>
-      <div>{'You have selected: ' + selectedStop}</div>
     </>
   );
 }

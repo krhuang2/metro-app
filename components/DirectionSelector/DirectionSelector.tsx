@@ -17,16 +17,16 @@ export default function DirectionSelector({directionData, selectedRoute}: IDirec
     // Reset the current selected option if the selected route changes
     let element: any = document.getElementById('direction');
     if (element) {
-      element.selectedIndex = 0;
+      element.value = selectedDirection;
     }
-  },[selectedRoute]);
+  },[selectedDirection, selectedRoute]);
 
 
   return (
     <>
       <div>
-        <label htmlFor='selectDirection'>Select Direction: </label>
-        <select data-testid={'directionSelector'} id='direction' name='selectDirection' onChange={(e) => dispatch(updateDirection(e.currentTarget.value))}>
+        <label className={'screenReaderText'} htmlFor='selectDirection'>Select Direction</label>
+        <select className={'select'} data-testid={'directionSelector'} id='direction' name='selectDirection' onChange={(e) => dispatch(updateDirection(e.currentTarget.value))}>
           <option data-testid={'defaultOption'} value={-1}>Select Direction</option>
           {directionData &&
                 directionData.map((direction, key) => {
@@ -37,7 +37,6 @@ export default function DirectionSelector({directionData, selectedRoute}: IDirec
           }
         </select>
       </div>
-      <div>{'You have selected: ' + selectedDirection}</div>
     </>
   );
 }
