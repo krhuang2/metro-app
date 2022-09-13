@@ -17,7 +17,6 @@ export default function StopSelector() {
 
   useEffect(() => {
     // Reset the current selected option on rerender
-    console.log('reset stop selector');
     let element: any = document.getElementById('stop');
     if (element) {
       element.value = '';
@@ -57,12 +56,12 @@ export default function StopSelector() {
     <>
       <div>
         <label className={'screenReaderText'} htmlFor='selectStop'>Select Stop</label>
-        <select className={'select'} id='stop' name='selectStop' onChange={handleStopSelectionChange}>
-          <option value={''}>Select Stop</option>
+        <select data-testid={'stopsSelector'} className={'select'} id='stop' name='selectStop' onChange={handleStopSelectionChange}>
+          <option data-testid={'stopsDefaultOption'} value={''}>Select Stop</option>
           {stopsData &&
                 stopsData?.map((stop, key) => {
                   return (
-                    <option value={stop.place_code} key={key}>{stop.description}</option>
+                    <option data-testid={'stopsOption'} value={stop.place_code} key={key}>{stop.description}</option>
                   );
                 })
           }

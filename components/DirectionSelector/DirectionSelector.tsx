@@ -54,12 +54,12 @@ export default function DirectionSelector() {
     <>
       <div>
         <label className={'screenReaderText'} htmlFor='selectDirection'>Select Direction</label>
-        <select className={'select'} data-testid={'directionSelector'} id='direction' name='selectDirection' onChange={handleDirectionSelectionChange}>
-          <option data-testid={'defaultOption'} value={-1}>Select Direction</option>
+        <select className={'select'} data-testid={'directionsSelector'} id='direction' name='selectDirection' onChange={handleDirectionSelectionChange}>
+          <option data-testid={'directionsDefaultOption'} value={-1}>Select Direction</option>
           {directionData &&
                 directionData.map((direction, key) => {
                   return (
-                    <option data-testid={'option'} value={direction.direction_id} key={key}>{direction.direction_name}</option>
+                    <option data-testid={'directionsOption'} value={direction.direction_id} key={key}>{direction.direction_name}</option>
                   );
                 })
           }
