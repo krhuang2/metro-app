@@ -15,7 +15,6 @@ export default function DirectionSelector() {
 
   useEffect(() => {
     // Reset the current selected option on rerender
-    console.log('reset direction selector');
     let element: any = document.getElementById('direction');
     if (element) {
       element.value = -1;

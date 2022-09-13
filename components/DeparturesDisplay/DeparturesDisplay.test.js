@@ -1,7 +1,8 @@
 import {describe, expect, test} from '@jest/globals';
-import {render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import DeparturesDisplay from './DeparturesDisplay';
 import '@testing-library/jest-dom/extend-expect';
+import { renderWithProviders } from '../../lib/redux/test-utils';
 
 const validDeparturesData = {
   stops: [
@@ -19,15 +20,16 @@ const validDeparturesData = {
   ]
 };
 
-const invalidDeparturesData = {
-  stops: null,
-  departures: []
+const initialValidState = {
+  departuresData: validDeparturesData,
+  stopsData: null,
+  directionsData: null
 };
 
 describe('DeparturesDisplay Component', () => {
   test('Display loading fallback if departuresData is incomplete', () => {
     // Arrange
-    render(<DeparturesDisplay departuresData={invalidDeparturesData}/>);
+    renderWithProviders(<DeparturesDisplay />);
     // Act
     // Assert
     expect((screen.getByTestId('loading'))).toBeInTheDocument();
@@ -35,7 +37,11 @@ describe('DeparturesDisplay Component', () => {
 
   test('do not Display loading fallback if departuresData is valid', () => {
     // Arrange
-    render(<DeparturesDisplay departuresData={validDeparturesData}/>);
+    renderWithProviders(<DeparturesDisplay />, {
+      preloadedState: {
+        data: initialValidState
+      }
+    });
     // Act
     const loadingElement = screen.queryByTestId('loading');
     // Assert
@@ -44,7 +50,11 @@ describe('DeparturesDisplay Component', () => {
 
   test('Display valid data if departuresData is valid', () => {
     // Arrange
-    render(<DeparturesDisplay departuresData={validDeparturesData}/>);
+    renderWithProviders(<DeparturesDisplay />, {
+      preloadedState: {
+        data: initialValidState
+      }
+    });
     // Act
     const stopDescription = screen.getByTestId('stopDescription').textContent;
     const stopNumber = screen.getByTestId('stopNumber').textContent;

@@ -4,15 +4,9 @@ import userEvent from '@testing-library/user-event';
 import DirectionSelector from './DirectionSelector';
 import '@testing-library/jest-dom/extend-expect';
 import { renderWithProviders } from '../../lib/redux/test-utils';
-import { jest, afterEach } from '@jest/globals';
+import { jest, beforeEach } from '@jest/globals';
 
 const selectedRoute = 'Route';
-
-const initialState = {
-  route: selectedRoute,
-  direction: -1,
-  placeCode: ''
-};
 
 const testDirectionData = [
   {
@@ -25,15 +19,48 @@ const testDirectionData = [
   }
 ];
 
-afterEach(() => {
-  // restore the spy created with spyOn
-  jest.restoreAllMocks();
+const initialSelectedState = {
+  route: selectedRoute,
+  direction: -1,
+  placeCode: ''
+};
+
+const initialDataState = {
+  directionsData: testDirectionData,
+  stopsData: null,
+  departuresData: null
+};
+
+const mockStopsData = [
+  {
+    place_code: 'STOP1',
+    description: 'description 1'
+  },
+  {
+    place_code: 'STOP2',
+    description: 'description 2'
+  }
+];
+
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    json: () => Promise.resolve(mockStopsData),
+  })
+);
+
+beforeEach(() => {
+  fetch.mockClear();
 });
 
 describe('DirectionSelector Component', () => {
   test('At first render, the default option should be selected', () => {
     // Arrange
-    renderWithProviders(<DirectionSelector directionData={testDirectionData} selectedRoute={selectedRoute} />);
+    renderWithProviders(<DirectionSelector />, {
+      preloadedState: {
+        selection: initialSelectedState,
+        data: initialDataState
+      }
+    });
     // Act
     const defaultOption = screen.getByTestId('defaultOption');
     const options = screen.getAllByTestId('option');
@@ -43,21 +70,67 @@ describe('DirectionSelector Component', () => {
     expect(options[1].selected).toBeFalsy();
   });
 
-  test('The dispatch should be called to update selectedDirection if new direction is selected', () => {
+  test('The data fetch should be called if new direction is selected', async () => {
     // Arrange
-    // const { store } = renderWithProviders(<DirectionSelector directionData={testDirectionData} selectedRoute={selectedRoute} />, {
-    //   preloadedState: {
-    //     selection: initialState
-    //   }
-    // });
+    const user = userEvent.setup();
+    renderWithProviders(<DirectionSelector />, {
+      preloadedState: {
+        selection: initialSelectedState,
+        data: initialDataState
+      }
+    });
+
+    const direction = testDirectionData[0].direction_id;
+    const route = selectedRoute;
     
-    //store.dispatch()
-    //const spy = jest.spyOn(store, 'dispatch');
     // Act
-    //userEvent.selectOptions(screen.getByTestId('directionSelector'), '0');
-    //fireEvent.change(screen.getByTestId('directionSelector'), {target: { value: 1 }});
+    await user.selectOptions(screen.getByTestId('directionSelector'), direction.toString());
 
     // Assert
-    //expect(spy).toHaveBeenCalled();
+    expect(fetch).toHaveBeenCalledWith('https://svc.metrotransit.org/nextripv2/stops/' + route + '/' + direction);
+  });
+
+  test('The data fetch should not be called when selecting default option', async () => {
+    // Arrange
+    const user = userEvent.setup();
+    renderWithProviders(<DirectionSelector />, {
+      preloadedState: {
+        selection: initialSelectedState,
+        data: initialDataState
+      }
+    });
+
+    const direction = '-1'; // the default option
+    
+    // Act
+    await user.selectOptions(screen.getByTestId('directionSelector'), direction);
+
+    // Assert
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  test('Render error message if data fetch is unsuccessful', async () => {
+    // Arrange
+    // make fetch mock return response ok: false
+    fetch.mockImplementationOnce(() => Promise.resolve({ 
+      ok: false,
+      json: () => Promise.resolve(mockStopsData)
+    }));
+
+    const user = userEvent.setup();
+    renderWithProviders(<DirectionSelector />, {
+      preloadedState: {
+        selection: initialSelectedState,
+        data: initialDataState
+      }
+    });
+
+    const direction = testDirectionData[0].direction_id;
+    
+    // Act
+    await user.selectOptions(screen.getByTestId('directionSelector'), direction.toString());
+
+    // Assert
+    expect(await screen.findByTestId('errorMessage')).toBeInTheDocument();
   });
 });
