@@ -8,7 +8,7 @@
 //     routes: NexTripRoute[];
 // }
 
-export interface INexTripRoute{
+export interface INexTripRoute {
     route_id: string;
     agency_id: number;
     route_label: string;

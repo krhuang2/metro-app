@@ -5,23 +5,19 @@ import '@testing-library/jest-dom/extend-expect';
 import { renderWithProviders } from '../../lib/redux/test-utils';
 import { jest, beforeEach } from '@jest/globals';
 import userEvent from '@testing-library/user-event';
-import { updateDeparturesData } from '../../lib/redux/slices/dataSlice';
 
-const validDeparturesData = {
-  stops: [
-    {
-      stop_id: 56334,
-      description: 'Target Field Station Platform 2'
-    }
-  ],
-  departures: [
-    {
-      departure_text: '4:00',
-      description: 'to Mall of America',
-      route_short_name: 'Blue'
-    }
-  ]
-};
+const routes = [
+  {
+    route_id: '901',
+    agency_id: 0,
+    route_label: 'route1'
+  },
+  {
+    route_id: '902',
+    agency_id: 0,
+    route_label: 'route2'
+  }
+];
 
 global.fetch = jest.fn(() =>
   Promise.resolve({
@@ -34,9 +30,9 @@ beforeEach(() => {
 });
 
 describe('FindByRoute Component', () => {
-  test.only('Do not display other components on inital load', () => {
+  test('Do not display other components on inital load', () => {
     // Arrange
-    renderWithProviders(<FindByRoute />);
+    renderWithProviders(<FindByRoute routeData={routes} />);
     // Act
     // Assert
     expect((screen.queryByTestId('directionsSelector'))).toBeNull();
@@ -44,67 +40,59 @@ describe('FindByRoute Component', () => {
     expect((screen.queryByTestId('departuresSection'))).toBeNull();
   });
 
-  test('Do not fetch data if no stop input was entered', async () => {
+  test('Expect the route options to be populated', () => {
     // Arrange
-    const user = userEvent.setup();
-    renderWithProviders(<FindByRoute />);
+    renderWithProviders(<FindByRoute routeData={routes}/>);
 
     // Act
-    await user.click(screen.getByTestId('searchButton'));
+    // Assert
+    expect(screen.getAllByTestId('routesOption').length).toBe(routes.length);
+  });
+
+  test('Do not fetch data if user selects default option', async () => {
+    // Arrange
+    const user = userEvent.setup();
+    renderWithProviders(<FindByRoute routeData={routes}/>);
+
+    const route = ''; // the default option
+    
+    // Act
+    await user.selectOptions(screen.getByTestId('routesSelector'), route);
+
     // Assert
     expect(fetch).not.toHaveBeenCalled();
   });
 
-  test('Do not fetch data if no stop input is Nan/Empty', async () => {
+  test('Fetch departures if option is selected', async () => {
     // Arrange
     const user = userEvent.setup();
-    renderWithProviders(<FindByRoute />);
+    renderWithProviders(<FindByRoute routeData={routes}/>);
 
-    const stopSearch = screen.getByTestId('stopSearch');
+    const route = routes[0].route_id;
+    
     // Act
-    await user.type(stopSearch, '12345');
-    await user.clear(stopSearch);
-    await user.click(screen.getByTestId('searchButton'));
+    await user.selectOptions(screen.getByTestId('routesSelector'), route);
+
     // Assert
-    expect(fetch).not.toHaveBeenCalled();
+    expect(fetch).toHaveBeenCalledWith('https://svc.metrotransit.org/nextripv2/directions/' + route);
   });
 
-  test('Fetch departures if valid stop number', async () => {
+  test('Render error message if data fetch is unsuccessful', async () => {
     // Arrange
-    const user = userEvent.setup();
-    const { store } = renderWithProviders(<FindByRoute />);
-
-    // make fetch mock to execute dispatch
-    fetch.mockImplementationOnce(() => Promise.resolve({ 
-      ok: true,
-      json: () => Promise.resolve(store.dispatch(updateDeparturesData(validDeparturesData)))
-    }));
-
-    const stopSearch = screen.getByTestId('stopSearch');
-    const input = '56334';
-    // Act
-    await user.type(stopSearch, input);
-    await user.click(screen.getByTestId('searchButton'));
-    // Assert
-    expect(fetch).toHaveBeenCalledWith('https://svc.metrotransit.org/nextripv2/' + input);
-  });
-
-  test('Display error message if fetch returns with error', async () => {
-    // Arrange
-    const user = userEvent.setup();
-    renderWithProviders(<FindByRoute />);
-
-    // make fetch mock to execute dispatch
+    // make fetch mock return response ok: false
     fetch.mockImplementationOnce(() => Promise.resolve({ 
       ok: false,
       json: () => Promise.resolve([])
     }));
 
-    const stopSearch = screen.getByTestId('stopSearch');
-    const input = '56334';
+    const user = userEvent.setup();
+    renderWithProviders(<FindByRoute routeData={routes} />);
+
+    const route = routes[0].route_id;
+    
     // Act
-    await user.type(stopSearch, input);
-    await user.click(screen.getByTestId('searchButton'));
+    await user.selectOptions(screen.getByTestId('routesSelector'), route);
+
     // Assert
     expect(await screen.findByTestId('errorMessage')).toBeInTheDocument();
   });

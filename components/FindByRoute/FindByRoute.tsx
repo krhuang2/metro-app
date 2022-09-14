@@ -64,12 +64,12 @@ export default function FindByRoute({routeData}: IFindByRouteProps) {
           <legend>Find By Route</legend>
           <div>
             <label className={'screenReaderText'} htmlFor='selectRoute'>Select Route</label>
-            <select className={'select'} id='route' name='selectRoute' onChange={handleRouteSelectionChange}>
-              <option value={''}>Select Route</option>
+            <select data-testid={'routesSelector'} className={'select'} id='route' name='selectRoute' onChange={handleRouteSelectionChange}>
+              <option data-testid={'routesDefaultOption'} value={''}>Select Route</option>
               {routeData &&
                 routeData.map((route, key) => {
                   return (
-                    <option value={route.route_id} key={key}>{route.route_label}</option>
+                    <option data-testid={'routesOption'} value={route.route_id} key={key}>{route.route_label}</option>
                   );
                 })
               }
