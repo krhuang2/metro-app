@@ -1,8 +1,8 @@
 import Head from 'next/head';
-import FindByRoute from '../components/FindByRoute';
-import HeroSection from '../components/HeroSection';
-import { INexTripRoute } from '../lib/interfaces';
-import image from '../public/images/smiling-bus.jpg';
+import FindByRoute from '../../components/FindByRoute';
+import HeroSection from '../../components/HeroSection';
+import { INexTripRoute } from '../../lib/interfaces';
+import image from '../../public/images/smiling-bus.jpg';
 
 interface IFindByRoutePageProps {
     routesData: INexTripRoute[];

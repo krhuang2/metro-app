@@ -13,6 +13,8 @@ interface IFindByRouteProps {
     routeData: INexTripRoute[];
 }
 export default function FindByRoute({routeData}: IFindByRouteProps) {
+  // TODO: handle state change by route parmas using router.query.slug
+  // const router = useRouter();
 
   // Selected state variables from store
   const directionsData = useSelector((state: RootState) => state.data.directionsData);
@@ -23,16 +25,22 @@ export default function FindByRoute({routeData}: IFindByRouteProps) {
   const dispatch = useDispatch();
   const [initialLoad, setIntialLoad] = useState(true); // Is this a new load on the page?
 
-  // Want to make sure we reset all state if we navigate off and on again
-  if (initialLoad) {
-    dispatch(resetData());
-    dispatch(resetSelections());
-    setIntialLoad(false);
-  }
+  // const fetchDeparturesData = async (selectedRoute: string, selectedDirection: string, selectedStop: string) => {
+  //   fetch('https://svc.metrotransit.org/nextripv2/' + selectedRoute + '/' + selectedDirection + '/' + selectedStop).then((response) => {
+  //     if (!response.ok) {
+  //       setHasError(true);
+  //     } else {setHasError(false);}
+  //     return response.json();
+  //   }).then((data) => {
+  //     dispatch(updateDeparturesData(data));
+  //   });
+  // };
+
+  
 
   // Keep track if there are errors
   const [hasError, setHasError] = useState(false);
-
+  
   // Data fetching functions
   const fetchDirectionsData = async (selectedRoute: string) => {
     fetch('https://svc.metrotransit.org/nextripv2/directions/' + selectedRoute).then((response) => {
@@ -55,6 +63,13 @@ export default function FindByRoute({routeData}: IFindByRouteProps) {
       dispatch(updateDirectionsData(null)); // if reseting to default selection, set state as null
     }
   };
+
+  // Want to make sure we reset all state if we navigate off and on again and set state based on url query
+  if (initialLoad) {
+    dispatch(resetData());
+    dispatch(resetSelections());
+    setIntialLoad(false);
+  }
 
 
   return (

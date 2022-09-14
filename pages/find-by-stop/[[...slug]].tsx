@@ -1,7 +1,7 @@
 import Head from 'next/head';
-import FindByStop from '../components/FindByStop/FindByStop';
-import HeroSection from '../components/HeroSection';
-import image from '../public/images/bus-stop.jpg';
+import FindByStop from '../../components/FindByStop/FindByStop';
+import HeroSection from '../../components/HeroSection';
+import image from '../../public/images/bus-stop.jpg';
 
 
 export default function FindByStopPage() {
