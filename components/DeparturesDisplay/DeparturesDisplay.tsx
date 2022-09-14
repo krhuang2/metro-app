@@ -19,11 +19,11 @@ export default function DeparturesDisplay() {
             </div>
             <div className={styles.stopDepartures}>
               <table className={styles.departuresTable}>
-                <thead>
+                <thead className={styles.tableHeading}>
                   <tr>
                     <th>Route</th>
                     <th>Destination</th>
-                    <th>Departs</th>
+                    <th className={styles.textRight}>Departs</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -33,7 +33,7 @@ export default function DeparturesDisplay() {
                           <tr className={styles.departure} key={key}>
                             <td data-testid={'routeShortName'}>{departure.route_short_name}</td>
                             <td data-testid={'description'}>{departure.description}</td>
-                            <td data-testid={'departureText'}>{departure.departure_text}</td>
+                            <td className={styles.textRight} data-testid={'departureText'}>{departure.departure_text}</td>
                           </tr>
                         );
                       })

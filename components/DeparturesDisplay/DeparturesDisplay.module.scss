@@ -1,3 +1,69 @@
 .departuresSection {
-  margin: auto;
+  margin-top: $gap;
+  background-color: $colorSecondary;
 }
+
+.stopDescription {
+  padding: 0px $gap;
+  display: flex;
+  justify-content: space-between;
+
+  h2 {
+    font-size: $textMedium;
+  }
+
+  @media screen and (min-width: $medium) {
+    h2 {
+      font-size: $textLarge;
+    }
+  }
+}
+
+.stopNumber {
+  align-self: center;
+  font-size: $textSmall;
+
+  @media screen and (min-width: $medium) {
+    font-size: $textMedium;
+  }
+}
+
+.departuresTable {
+  width: 100%;
+  border-collapse: collapse;
+  padding-bottom: $gap;
+  font-size: $textSmall;
+  
+  td {
+    padding: $gap*0.5 $gap;
+    border-bottom: 1px solid black;
+  }
+
+  @media screen and (min-width: $medium) {
+    font-size: $textMedium;
+  }
+}
+
+.tableHeading {
+  background-color: $colorPrimary;
+  color: white;
+  font-size: $textSmall;
+
+  th {
+    text-align: left;
+    padding: $gap*0.5 $gap;
+  }
+
+  .textRight {
+    text-align: right;
+  }
+
+  @media screen and (min-width: $medium) {
+    font-size: $textMedium;
+  }
+}
+
+.textRight {
+  text-align: right;
+}
+

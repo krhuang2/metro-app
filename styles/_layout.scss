@@ -13,6 +13,11 @@ body {
 .container {
     padding: 0 1rem;
   }
+
+.contentContainer {
+  margin: auto;
+  max-width: 600px;
+}
   
   .main {
     min-height: 100vh;
@@ -36,11 +41,6 @@ body {
   .description {
     text-align: center;
   }
-
-.form {
-  margin: auto;
-  max-width: 500px;
-}
 
 // Screenreaders
 .screenReaderText {

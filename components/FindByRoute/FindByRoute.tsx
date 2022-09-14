@@ -58,7 +58,7 @@ export default function FindByRoute({routeData}: IFindByRouteProps) {
 
 
   return (
-    <>
+    <section className={'contentContainer'}>
       <form className={'form'}>
         <fieldset>
           <legend>Find By Route</legend>
@@ -89,6 +89,6 @@ export default function FindByRoute({routeData}: IFindByRouteProps) {
       {hasError &&
         <ErrorMessage message={'Uh Oh... Something went wrong.'} /> 
       }
-    </>
+    </section>
   );
 }

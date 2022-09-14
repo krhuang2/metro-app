@@ -46,7 +46,7 @@ export default function FindByStop() {
   };
 
   return (
-    <>
+    <section className={'contentContainer'}>
       <form className={'form'}>
         <fieldset>
           <legend>Find By Stop Number</legend>
@@ -63,6 +63,6 @@ export default function FindByStop() {
       {hasError &&
         <ErrorMessage message={'Invalid Stop Number Entered'}/>
       }
-    </>
+    </section>
   );
 }
