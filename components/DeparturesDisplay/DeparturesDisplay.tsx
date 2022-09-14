@@ -7,19 +7,12 @@ export default function DeparturesDisplay() {
 
   const departuresData = useSelector((state: RootState) => state.data.departuresData);
 
-  // Since parent component can load this component before departures data is actually ready, we need to check
-  if (!departuresData || !departuresData.stops) {
-    return (
-      <div data-testid={'loading'}>Loading...</div>
-    );
-  }
-  else {
-    // stops come in an array but seems like it's always length one
-    const stop = departuresData.stops[0];
-    return (
-      <>
-        {departuresData &&
-          <div className={styles.departuresSection}>
+  const stop = departuresData?.stops[0]; // stops come in an array but seems like it's always length one
+
+  return (
+    <>
+      {stop &&
+          <div data-testid={'departuresSection'} className={styles.departuresSection}>
             <div className={styles.stopDescription}>
               <h2 className={styles.stopName} data-testid={'stopDescription'}>{stop.description}</h2>
               <span className={styles.stopNumber} data-testid={'stopNumber'}><strong>Stop #: </strong>{stop.stop_id}</span>
@@ -34,7 +27,7 @@ export default function DeparturesDisplay() {
                   </tr>
                 </thead>
                 <tbody>
-                  {departuresData.departures &&
+                  {departuresData?.departures &&
                       departuresData.departures.map((departure, key) => {
                         return (
                           <tr className={styles.departure} key={key}>
@@ -50,8 +43,7 @@ export default function DeparturesDisplay() {
               </table>
             </div>
           </div>      
-        }
-      </>
-    );
-  }
+      }
+    </>
+  );
 }

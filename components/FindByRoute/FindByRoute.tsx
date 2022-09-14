@@ -83,7 +83,7 @@ export default function FindByRoute({routeData}: IFindByRouteProps) {
           }
         </fieldset>
       </form>
-      {(departuresData != null) && !hasError &&
+      {(departuresData?.stops) && !hasError &&
         <DeparturesDisplay />
       }
       {hasError &&

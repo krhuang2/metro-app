@@ -52,12 +52,12 @@ export default function FindByStop() {
           <legend>Find By Stop Number</legend>
           <div>
             <label htmlFor={'stopNumber'}>Enter Stop Number: </label>
-            <input id={'stopSearch'} type={'number'} name={'stopNumber'}></input>
-            <button id={'search'} onClick={handleSearchOnClick}>Search</button>
+            <input data-testid={'stopSearch'} id={'stopSearch'} type={'number'} name={'stopNumber'}></input>
+            <button data-testid={'searchButton'} id={'search'} onClick={handleSearchOnClick}>Search</button>
           </div>
         </fieldset>
       </form>
-      {(departuresData != null) && (!hasError) &&
+      {(departuresData?.stops) && (!hasError) &&
         <DeparturesDisplay />
       }
       {hasError &&

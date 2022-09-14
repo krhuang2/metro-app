@@ -27,15 +27,15 @@ const initialValidState = {
 };
 
 describe('DeparturesDisplay Component', () => {
-  test('Display loading fallback if departuresData is incomplete', () => {
+  test('Display nothing if departuresData is incomplete', () => {
     // Arrange
     renderWithProviders(<DeparturesDisplay />);
     // Act
     // Assert
-    expect((screen.getByTestId('loading'))).toBeInTheDocument();
+    expect((screen.queryByTestId('departuresSection'))).toBeNull();
   });
 
-  test('do not Display loading fallback if departuresData is valid', () => {
+  test('Display departuresSection if departuresData is valid', () => {
     // Arrange
     renderWithProviders(<DeparturesDisplay />, {
       preloadedState: {
@@ -43,9 +43,9 @@ describe('DeparturesDisplay Component', () => {
       }
     });
     // Act
-    const loadingElement = screen.queryByTestId('loading');
+    const element = screen.queryByTestId('departuresSection');
     // Assert
-    expect(loadingElement).toBeNull();
+    expect(element).not.toBeNull();
   });
 
   test('Display valid data if departuresData is valid', () => {
