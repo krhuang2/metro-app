@@ -76,7 +76,7 @@ export default function FindByRoute({routeData}: IFindByRouteProps) {
         const route = router.query.slug[0];
         const direction = router.query.slug[1];
         const placeCode = router.query.slug[2];
-        console.log('fetch departures');
+        
         fetchDeparturesData(route, direction, placeCode);
       }
       else {
