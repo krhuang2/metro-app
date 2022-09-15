@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../lib/redux/store';
 import styles from './DeparturesDisplay.module.scss';
 
-
+// Component to display departures based on the departuresData state
 export default function DeparturesDisplay() {
 
   const departuresData = useSelector((state: RootState) => state.data.departuresData);

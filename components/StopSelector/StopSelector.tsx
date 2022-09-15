@@ -5,7 +5,9 @@ import { updateDeparturesData } from '../../lib/redux/slices/dataSlice';
 import { updatePlaceCode } from '../../lib/redux/slices/selectionSlice';
 import { RootState } from '../../lib/redux/store';
 
-
+// Component that renders the stop selector. If a selection is made, it will use the selected
+// route and selected direction to populate a url to navigate to with params that will trigger
+// a fetch for departure data.
 export default function StopSelector() {
   // get the global state
   const selectedRoute = useSelector((state: RootState) => state.selection.route);

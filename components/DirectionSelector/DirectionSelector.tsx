@@ -5,6 +5,8 @@ import { RootState } from '../../lib/redux/store';
 import React, { useEffect, useState } from 'react';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
 
+// Component containing the direction selector input. If new direction is selected, fetch data to get all the Stops
+// and then update the stopsData state to trigger the stopSelector component.
 export default function DirectionSelector() {
   // get the global state
   const selectedRoute = useSelector((state: RootState) => state.selection.route);

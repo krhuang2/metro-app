@@ -7,7 +7,10 @@ import DeparturesDisplay from '../DeparturesDisplay';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
 import styles from './FindByStop.module.scss';
 
-
+// Component that handles the ability to search departures by stop number. 
+// On render, it will check if there is a param in the url query and then attempt to
+// fetch departures data with it. If the user enters input as the stop number and submits,
+// it will reroute the user to the same page but with a param to do the fetch.
 export default function FindByStop() {
 
   const router = useRouter();

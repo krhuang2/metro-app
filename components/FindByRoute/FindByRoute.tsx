@@ -13,8 +13,13 @@ import { useRouter } from 'next/router';
 interface IFindByRouteProps {
     routeData: INexTripRoute[];
 }
+
+// Component containing the selector for routes as well as the other selectors as child components.
+// On initial render, it will check the router to see if params are set. If they are, attempt to make
+// a fetch request and display departure data. If the user selects a route, it will update state and fetch
+// direction data to render the direcionSelector component.
 export default function FindByRoute({routeData}: IFindByRouteProps) {
-  // TODO: handle state change by route parmas using router.query.slug
+
   const router = useRouter();
 
   // Selected state variables from store
@@ -25,6 +30,7 @@ export default function FindByRoute({routeData}: IFindByRouteProps) {
 
   const dispatch = useDispatch();
 
+  // Fetch the departureData. If successful, update state. If not, update hasError.
   const fetchDeparturesData = useCallback(async (selectedRoute: string, selectedDirection: string, selectedStop: string) => {
     fetch('https://svc.metrotransit.org/nextripv2/' + selectedRoute + '/' + selectedDirection + '/' + selectedStop).then((response) => {
       if (!response.ok) {
@@ -65,7 +71,7 @@ export default function FindByRoute({routeData}: IFindByRouteProps) {
   };
 
   useEffect(() => {
-    if (router.isReady) {
+    if (router.isReady) { // if router picks up 3 params, attempt to fetch departures data
       if (router.query.slug && router.query.slug?.length == 3) {
         const route = router.query.slug[0];
         const direction = router.query.slug[1];
