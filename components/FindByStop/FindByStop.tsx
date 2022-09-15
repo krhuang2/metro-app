@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { resetData, updateDeparturesData } from '../../lib/redux/slices/dataSlice';
 import { RootState } from '../../lib/redux/store';
@@ -8,21 +9,16 @@ import ErrorMessage from '../ErrorMessage/ErrorMessage';
 
 export default function FindByStop() {
 
+  const router = useRouter();
+
   // Keep track if there are errors
   const [hasError, setHasError] = useState(false);
-
+  // Get the global state data
   const departuresData = useSelector((state: RootState) => state.data.departuresData);
 
   const dispatch = useDispatch();
-  const [initialLoad, setIntialLoad] = useState(true); // Is this a new load on the page?
-
-  // Want to make sure we reset all state if we navigate off and on again
-  if (initialLoad) {
-    dispatch(resetData());
-    setIntialLoad(false);
-  }
-
-  const fetchDeparturesData = async (stopId: number) => {
+  // Function that fetches departuresData and then updates global state data or sets error
+  const fetchDeparturesData = useCallback(async (stopId: number | string) => {
     const url = 'https://svc.metrotransit.org/nextripv2/' + stopId;
 
     fetch(url).then((response) => {
@@ -33,17 +29,31 @@ export default function FindByStop() {
     }).then((data) => {
       dispatch(updateDeparturesData(data));
     });
-  };
+  },[dispatch]);
 
-  // Function to call to fetch departure data when submit is clicked
+  // Function to route with parameter when submit is clicked. Will trigger useEffect and fetch new data
   const handleSearchOnClick = (event: any) => {
     event.preventDefault();
     const inputValue = (document.getElementById('stopSearch') as HTMLInputElement).valueAsNumber;
     // Only valid submission if there is input
     if (!isNaN(inputValue)){
-      fetchDeparturesData(inputValue);
+      router.push('/find-by-stop/' + inputValue);
     }
   };
+
+  // fetch the data if url params exist
+  useEffect(() => {
+    if (router.isReady) {
+      if (router.query.slug && router.query.slug?.length > 0) {
+        const stopNumber = router.query.slug[0];
+        fetchDeparturesData(stopNumber);
+      }
+      else {
+        dispatch(resetData());
+      }
+    }
+  },[fetchDeparturesData, router.isReady, router.query.slug, dispatch]);
+  
 
   return (
     <section className={'contentContainer'}>

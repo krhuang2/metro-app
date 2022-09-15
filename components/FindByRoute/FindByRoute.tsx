@@ -1,5 +1,5 @@
 import { INexTripRoute } from '../../lib/interfaces';
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import DirectionSelector from '../DirectionSelector';
 import { useSelector, useDispatch } from 'react-redux';
 import { resetSelections, updateRoute } from '../../lib/redux/slices/selectionSlice';
@@ -7,14 +7,15 @@ import { RootState } from '../../lib/redux/store';
 import StopSelector from '../StopSelector/StopSelector';
 import DeparturesDisplay from '../DeparturesDisplay/DeparturesDisplay';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
-import { resetData, updateDirectionsData } from '../../lib/redux/slices/dataSlice';
+import { resetData, updateDeparturesData, updateDirectionsData } from '../../lib/redux/slices/dataSlice';
+import { useRouter } from 'next/router';
 
 interface IFindByRouteProps {
     routeData: INexTripRoute[];
 }
 export default function FindByRoute({routeData}: IFindByRouteProps) {
   // TODO: handle state change by route parmas using router.query.slug
-  // const router = useRouter();
+  const router = useRouter();
 
   // Selected state variables from store
   const directionsData = useSelector((state: RootState) => state.data.directionsData);
@@ -23,18 +24,17 @@ export default function FindByRoute({routeData}: IFindByRouteProps) {
 
 
   const dispatch = useDispatch();
-  const [initialLoad, setIntialLoad] = useState(true); // Is this a new load on the page?
 
-  // const fetchDeparturesData = async (selectedRoute: string, selectedDirection: string, selectedStop: string) => {
-  //   fetch('https://svc.metrotransit.org/nextripv2/' + selectedRoute + '/' + selectedDirection + '/' + selectedStop).then((response) => {
-  //     if (!response.ok) {
-  //       setHasError(true);
-  //     } else {setHasError(false);}
-  //     return response.json();
-  //   }).then((data) => {
-  //     dispatch(updateDeparturesData(data));
-  //   });
-  // };
+  const fetchDeparturesData = useCallback(async (selectedRoute: string, selectedDirection: string, selectedStop: string) => {
+    fetch('https://svc.metrotransit.org/nextripv2/' + selectedRoute + '/' + selectedDirection + '/' + selectedStop).then((response) => {
+      if (!response.ok) {
+        setHasError(true);
+      } else {setHasError(false);}
+      return response.json();
+    }).then((data) => {
+      dispatch(updateDeparturesData(data));
+    });
+  },[dispatch]);
 
   
 
@@ -64,12 +64,21 @@ export default function FindByRoute({routeData}: IFindByRouteProps) {
     }
   };
 
-  // Want to make sure we reset all state if we navigate off and on again and set state based on url query
-  if (initialLoad) {
-    dispatch(resetData());
-    dispatch(resetSelections());
-    setIntialLoad(false);
-  }
+  useEffect(() => {
+    if (router.isReady) {
+      if (router.query.slug && router.query.slug?.length == 3) {
+        const route = router.query.slug[0];
+        const direction = router.query.slug[1];
+        const placeCode = router.query.slug[2];
+        console.log('fetch departures');
+        fetchDeparturesData(route, direction, placeCode);
+      }
+      else {
+        dispatch(resetData());
+        dispatch(resetSelections());
+      }
+    }
+  },[dispatch, fetchDeparturesData, router.isReady, router.query.slug]);
 
 
   return (

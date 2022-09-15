@@ -5,6 +5,8 @@ import '@testing-library/jest-dom/extend-expect';
 import { renderWithProviders } from '../../lib/redux/test-utils';
 import { jest, beforeEach } from '@jest/globals';
 import userEvent from '@testing-library/user-event';
+import { createMockRouter } from '../../lib/utils/MockRouter';
+import { RouterContext } from 'next/dist/shared/lib/router-context';
 
 const routes = [
   {
@@ -32,7 +34,12 @@ beforeEach(() => {
 describe('FindByRoute Component', () => {
   test('Do not display other components on inital load', () => {
     // Arrange
-    renderWithProviders(<FindByRoute routeData={routes} />);
+    const router = createMockRouter();
+    renderWithProviders(
+      <RouterContext.Provider value={router}>
+        <FindByRoute routeData={routes} />
+      </RouterContext.Provider>
+    );
     // Act
     // Assert
     expect((screen.queryByTestId('directionsSelector'))).toBeNull();
@@ -42,7 +49,12 @@ describe('FindByRoute Component', () => {
 
   test('Expect the route options to be populated', () => {
     // Arrange
-    renderWithProviders(<FindByRoute routeData={routes}/>);
+    const router = createMockRouter();
+    renderWithProviders(
+      <RouterContext.Provider value={router}>
+        <FindByRoute routeData={routes} />
+      </RouterContext.Provider>
+    );
 
     // Act
     // Assert
@@ -52,7 +64,12 @@ describe('FindByRoute Component', () => {
   test('Do not fetch data if user selects default option', async () => {
     // Arrange
     const user = userEvent.setup();
-    renderWithProviders(<FindByRoute routeData={routes}/>);
+    const router = createMockRouter();
+    renderWithProviders(
+      <RouterContext.Provider value={router}>
+        <FindByRoute routeData={routes} />
+      </RouterContext.Provider>
+    );
 
     const route = ''; // the default option
     
@@ -63,10 +80,15 @@ describe('FindByRoute Component', () => {
     expect(fetch).not.toHaveBeenCalled();
   });
 
-  test('Fetch departures if option is selected', async () => {
+  test('Fetch directions if option is selected', async () => {
     // Arrange
     const user = userEvent.setup();
-    renderWithProviders(<FindByRoute routeData={routes}/>);
+    const router = createMockRouter();
+    renderWithProviders(
+      <RouterContext.Provider value={router}>
+        <FindByRoute routeData={routes} />
+      </RouterContext.Provider>
+    );
 
     const route = routes[0].route_id;
     
@@ -86,7 +108,12 @@ describe('FindByRoute Component', () => {
     }));
 
     const user = userEvent.setup();
-    renderWithProviders(<FindByRoute routeData={routes} />);
+    const router = createMockRouter();
+    renderWithProviders(
+      <RouterContext.Provider value={router}>
+        <FindByRoute routeData={routes} />
+      </RouterContext.Provider>
+    );
 
     const route = routes[0].route_id;
     
