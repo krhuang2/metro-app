@@ -7,9 +7,14 @@
 }
 
 .heroImage {
-    padding: $gap;
+    padding: $gap*.05;
     max-width: $gapLarge * 6;
     margin: auto;
+
+    @media screen and (min-width: $medium) {
+        flex-direction: row;
+        padding: $gap;
+    }
 }
 
 .heroTitle {
@@ -22,9 +27,15 @@
 
 .selectRouteLinks {
     display: flex;
-    padding: $gap 0;
+    padding: $gap*0.5 0;
     justify-content: center;
     flex-wrap: wrap;
+    flex-direction: column;
+
+    @media screen and (min-width: $medium) {
+        flex-direction: row;
+        padding: $gap 0;
+    }
 }
 
 .selectRouteLink {

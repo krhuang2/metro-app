@@ -1,0 +1,31 @@
+.inputContainer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  @media screen and (min-width: $medium) {
+    justify-content: center;
+  }
+}
+
+.inputLabel {
+  padding-right: $gap;
+  padding-bottom: $gap*0.5;
+
+  @media screen and (min-width: $medium) {
+    font-size: $textMedium;
+    padding-bottom: 0;
+  }
+}
+
+.input {
+  padding: 5px 15px;
+}
+
+.searchButton {
+  margin-left: $gap;
+  padding: 5px 15px;
+
+  @media screen and (min-width: $medium) {
+    font-size: $textMedium;
+  }
+}

@@ -1,4 +1,5 @@
+import styles from './ErrorMessage.module.scss';
 
 export default function ErrorMessage({message}: {message: string}) {
-  return <div data-testid={'errorMessage'}>{message}</div>;
+  return <div className={styles.errorMessage} data-testid={'errorMessage'}>{message}</div>;
 }

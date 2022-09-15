@@ -5,6 +5,7 @@ import { resetData, updateDeparturesData } from '../../lib/redux/slices/dataSlic
 import { RootState } from '../../lib/redux/store';
 import DeparturesDisplay from '../DeparturesDisplay';
 import ErrorMessage from '../ErrorMessage/ErrorMessage';
+import styles from './FindByStop.module.scss';
 
 
 export default function FindByStop() {
@@ -60,10 +61,10 @@ export default function FindByStop() {
       <form className={'form'}>
         <fieldset>
           <legend>Find By Stop Number</legend>
-          <div>
-            <label htmlFor={'stopNumber'}>Enter Stop Number: </label>
-            <input data-testid={'stopSearch'} id={'stopSearch'} type={'number'} name={'stopNumber'}></input>
-            <button data-testid={'searchButton'} id={'search'} onClick={handleSearchOnClick}>Search</button>
+          <div className={styles.inputContainer}>
+            <label className={styles.inputLabel} htmlFor={'stopNumber'}>Enter Stop Number: </label>
+            <input className={styles.input} data-testid={'stopSearch'} id={'stopSearch'} type={'number'} name={'stopNumber'}></input>
+            <button className={styles.searchButton} data-testid={'searchButton'} id={'search'} onClick={handleSearchOnClick}>Search</button>
           </div>
         </fieldset>
       </form>
