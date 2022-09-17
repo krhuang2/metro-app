@@ -28,6 +28,7 @@ export default function FindByStop() {
     fetch(url).then((response) => {
       if (!response.ok) {
         setHasError(true);
+        console.log(url);
       } else {setHasError(false);}
       return response.json();
     }).then((data) => {
