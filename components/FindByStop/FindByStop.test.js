@@ -130,7 +130,7 @@ describe('FindByStop Component', () => {
     expect(router.push).toHaveBeenCalledWith('/find-by-stop/' + input);
   });
 
-  test.only('Display error message if fetch returns with error', async () => {
+  test('Display error message if fetch returns with error', async () => {
     // Arrange
     const stopNumber = '12345';
     const router = createMockRouter({
@@ -139,18 +139,17 @@ describe('FindByStop Component', () => {
       }
     });
 
+    // make fetch mock to execute dispatch
+    fetch.mockImplementationOnce(() => Promise.resolve({ 
+      ok: false,
+      json: () => Promise.resolve(validDeparturesData)
+    }));
+
     renderWithProviders(
       <RouterContext.Provider value={router}>
         <FindByStop />
       </RouterContext.Provider>
     );
-
-    // make fetch mock to execute dispatch
-    fetch.mockImplementationOnce(() => Promise.resolve({ 
-      ok: false,
-      json: () => Promise.resolve({})
-    }));
-
 
     // Act
     // Assert
@@ -158,6 +157,6 @@ describe('FindByStop Component', () => {
       expect(fetch).toHaveBeenCalledWith('https://svc.metrotransit.org/nextripv2/' + stopNumber); 
     });
 
-    await expect(screen.findByTestId('errorMessage')).toBeInTheDocument();
+    expect(await screen.findByTestId('errorMessage')).toBeInTheDocument();
   });
 });
