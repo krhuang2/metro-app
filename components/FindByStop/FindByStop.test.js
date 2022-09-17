@@ -1,34 +1,34 @@
 import {describe, expect, test} from '@jest/globals';
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import FindByStop from './FindByStop';
 import '@testing-library/jest-dom/extend-expect';
 import { renderWithProviders } from '../../lib/redux/test-utils';
 import { jest, beforeEach } from '@jest/globals';
 import userEvent from '@testing-library/user-event';
-//import { updateDeparturesData } from '../../lib/redux/slices/dataSlice';
 import { createMockRouter } from '../../lib/utils/MockRouter';
 import { RouterContext } from 'next/dist/shared/lib/router-context';
 import React from 'react';
 
-// const validDeparturesData = {
-//   stops: [
-//     {
-//       stop_id: 56334,
-//       description: 'Target Field Station Platform 2'
-//     }
-//   ],
-//   departures: [
-//     {
-//       departure_text: '4:00',
-//       description: 'to Mall of America',
-//       route_short_name: 'Blue'
-//     }
-//   ]
-// };
+const validDeparturesData = {
+  stops: [
+    {
+      stop_id: 56334,
+      description: 'Target Field Station Platform 2'
+    }
+  ],
+  departures: [
+    {
+      departure_text: '4:00',
+      description: 'to Mall of America',
+      route_short_name: 'Blue'
+    }
+  ]
+};
 
 global.fetch = jest.fn(() =>
   Promise.resolve({
-    json: () => Promise.resolve([]),
+    ok: true,
+    json: () => Promise.resolve(validDeparturesData),
   })
 );
 
@@ -85,34 +85,30 @@ describe('FindByStop Component', () => {
     expect(fetch).not.toHaveBeenCalled();
   });
 
-  // test('Fetch departures if valid stop number param in url', async () => {
-  //   // Arrange
-  //   const stopNumber = '12345';
-  //   const router = createMockRouter({
-  //     query: { 
-  //       slug: [stopNumber]
-  //     }
-  //   });
+  test('Fetch departures if valid stop number param in url', async () => {
+    // Arrange
+    const stopNumber = '12345';
+    const router = createMockRouter({
+      query: { 
+        slug: [stopNumber]
+      }
+    });
 
-  //   renderWithProviders(
-  //     <RouterContext.Provider value={router}>
-  //       <FindByStop />
-  //     </RouterContext.Provider>
-  //   );
+    renderWithProviders(
+      <RouterContext.Provider value={router}>
+        <FindByStop />
+      </RouterContext.Provider>
+    );
+    
 
-  //   // make fetch mock to execute dispatch
-  //   fetch.mockImplementationOnce(() => Promise.resolve({ 
-  //     ok: true,
-  //     json: () => Promise.resolve({})
-  //   }));
+    // Act
 
-  //   // Act
-
-  //   // Assert
-  //   await waitFor(() => { 
-  //     expect(fetch).toHaveBeenCalledWith('https://svc.metrotransit.org/nextripv2/' + stopNumber); 
-  //   });
-  // });
+    // Assert
+    await waitFor(() => { 
+      expect(fetch).toHaveBeenCalledWith('https://svc.metrotransit.org/nextripv2/' + stopNumber); 
+    });
+    expect(await screen.findByTestId('departuresSection')).toBeInTheDocument();
+  });
 
   test('Call router push if valid stop number was entered', async () => {
     // Arrange
@@ -134,35 +130,33 @@ describe('FindByStop Component', () => {
     expect(router.push).toHaveBeenCalledWith('/find-by-stop/' + input);
   });
 
-  //   test.only('Display error message if fetch returns with error', async () => {
-  //     // Arrange
-  //     const stopNumber = '12345';
-  //     const router = createMockRouter({
-  //       query: { 
-  //         slug: [stopNumber]
-  //       }
-  //     });
+  test('Display error message if fetch returns with error', async () => {
+    // Arrange
+    const stopNumber = '12345';
+    const router = createMockRouter({
+      query: { 
+        slug: [stopNumber]
+      }
+    });
 
-  //     const { store } = renderWithProviders(
-  //       <RouterContext.Provider value={router}>
-  //         <FindByStop />
-  //       </RouterContext.Provider>
-  //     );
+    // make fetch mock to execute dispatch
+    fetch.mockImplementationOnce(() => Promise.resolve({ 
+      ok: false,
+      json: () => Promise.resolve(validDeparturesData)
+    }));
 
-  //     const update = updateDeparturesData(validDeparturesData);
-  //     // make fetch mock to execute dispatch
-  //     fetch.mockImplementationOnce(() => Promise.resolve({ 
-  //       ok: false,
-  //       json: () => Promise.resolve(store.dispatch(update))
-  //     }));
+    renderWithProviders(
+      <RouterContext.Provider value={router}>
+        <FindByStop />
+      </RouterContext.Provider>
+    );
 
+    // Act
+    // Assert
+    await waitFor(() => { 
+      expect(fetch).toHaveBeenCalledWith('https://svc.metrotransit.org/nextripv2/' + stopNumber); 
+    });
 
-//     // Act
-//     // Assert
-//     await waitFor(() => { 
-//       expect(fetch).toHaveBeenCalledWith('https://svc.metrotransit.org/nextripv2/' + stopNumber); 
-//       expect(update).toHaveBeenCalled;
-//       //expect(screen.findByTestId('errorMessage')).toBeInTheDocument();
-//     });
-//   });
+    expect(await screen.findByTestId('errorMessage')).toBeInTheDocument();
+  });
 });
