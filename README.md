@@ -7,7 +7,7 @@ Clone the repo locally and run `npm install`.
 
 To run the app, use `npm run build` and then `npm start` to start the local server. Navigate to `http://localhost:3000` to view locally.
 
-To run tests use `npm run test` - Note: didn't have time to get all unit tests in for complete coverage.
+To run tests use `npm run test`
 
 ## Assumptions
 - App should have same/similar functionality to the provided live example: https://www.metrotransit.org/nextrip
@@ -44,7 +44,7 @@ I chose Next.js as a framework since it is built on React and has additional fea
 I didn't want to spend TOO much time on this, but there were things I still would want to do to make the app better:
 
 - Address accessibility (focus management, aria-live announcers, etc...)
-- Finish unit tests
+- Maybe look into end to end testing with Cypress?
 - Styling to make it look better
 - Is there a better way to handle state/data fetching? (SWR?)
 - Maybe look into Redux Undo for managing back and forth routing?
